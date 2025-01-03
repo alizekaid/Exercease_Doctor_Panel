@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/animations.css">  
+    <link rel="stylesheet" href="../static/css/main.css">  
+    <link rel="stylesheet" href="../static/css/admin.css">
+    <title>All Patients</title>
+    
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            vertical-align: middle;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+
+        .sub-table {
+            animation: transitionIn-Y-bottom 0.5s;
+        }
+
+        .sub-table:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .sub-table:hover {
+            background-color: #e9e9e9;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover, .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="menu">
+            <table class="menu-container" border="0">
+                <tr>
+                    <td style="padding:10px" colspan="2">
+                        <table border="0" class="profile-container">
+                            <tr>
+                                <td width="30%" style="padding-left:20px">
+                                    <img src="../static/img/user.png" alt="" width="100%" style="border-radius:50%">
+                                </td>
+                                <td style="padding:0px;margin:0px;">
+                                    <p class="profile-title">Admin</p>
+                                    <p class="profile-subtitle">{{ admin_email }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <a href="{{ url_for('logout') }}"><input type="button" value="Log out" class="logout-btn btn-primary-soft btn"></a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr class="menu-row">
+                    <td class="menu-btn menu-icon-dashbord menu-active menu-icon-dashbord-active">
+                        <a href="{{ url_for('admin_dashboard') }}" class="non-style-link-menu"><div><p class="menu-text">Dashboard</p></a></div>
+                    </td>
+                </tr>
+                <tr class="menu-row">
+                    <td class="menu-btn menu-icon-patient menu-active menu-icon-patient-active">
+                        <a href="{{ url_for('all_patients') }}" class="non-style-link-menu non-style-link-menu-active"><div><p class="menu-text">All Patients</p></a></div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="dash-body">
+            <table border="0" width="100%" style="border-spacing: 0;margin:0;padding:0;margin-top:25px;">
+                <tr>
+                    <td width="13%">
+                        <a href="{{ url_for('admin_dashboard') }}"><button class="login-btn btn-primary-soft btn btn-icon-back" style="padding-top:11px;padding-bottom:11px;margin-left:20px;width:125px"><font class="tn-in-text">Back</font></button></a>
+                    </td>
+                    <td>
+                        <form action="" method="post" class="header-search">
+                            <input type="search" name="search12" class="input-text header-searchbar" placeholder="Search Patient name or Email" list="patient">&nbsp;&nbsp;
+                            <datalist id="patient">
+                                <option value="John Doe"><br/>
+                                <option value="johndoe@example.com"><br/>
+                                <option value="Jane Smith"><br/>
+                                <option value="janesmith@example.com"><br/>
+                            </datalist>
+                            <input type="Submit" value="Search" name="search" class="login-btn btn-primary btn" style="padding-left: 25px;padding-right: 25px;padding-top: 10px;padding-bottom: 10px;">
+                        </form>
+                    </td>
+                    <td width="15%">
+                        <p style="font-size: 14px;color: rgb(119, 119, 119);padding: 0;margin: 0;text-align: right;">
+                            Date
+                        </p>
+                        <p class="heading-sub12" style="padding: 0;margin: 0;">{{ today_date }}</p>
+                        </p>
+                    </td>
+                    <td width="10%">
+                        <button  class="btn-label"  style="display: flex;justify-content: center;align-items: center;"><img src="../static/img/calendar.svg" width="100%"></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <center>
+                            <div class="abc scroll">
+                                <table width="93%" class="sub-table scrolldown" style="border-spacing:0;">
+                                    <thead>
+                                        <tr>
+                                            <th class="table-headin">Name</th>
+                                            <th class="table-headin">Age</th>
+                                            <th class="table-headin">Email</th>
+                                            <th class="table-headin">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for patient in patients %}
+                                        <tr>
+                                            <td>{{ patient.name_surname }}</td>
+                                            <td>{{ patient.age }}</td>
+                                            <td>{{ patient.email }}</td>
+                                            <td>
+                                                <a href="{{ url_for('see_exercises', uid=patient.uid) }}" class="btn btn-primary">See Exercises</a>
+                                                <a href="#" class="btn btn-primary" onclick="openNotificationModal('{{ patient.uid }}')">Send Notification</a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+
+                                    </tbody>
+                                </table>
+                                
+                                <!-- Notification Modal -->
+                                <div id="notificationModal" class="modal">
+                                    <div class="modal-content">
+                                        <span class="close" onclick="closeNotificationModal()">&times;</span>
+                                        <h2>Send Notification</h2>
+                                        <input id="notificationTitle" class="input-text" placeholder="Type your title here..." style="width: 100%; margin-top: 10px;">
+                                        <textarea id="notificationMessage" class="textarea" placeholder="Type your message here..."></textarea>
+                                        <button class="btn btn-primary" onclick="sendNotification()">Send</button>
+                                    </div>
+                                </div>
+
+                                <script>
+                                     let selectedPatientUid = null;
+
+                                    function openNotificationModal(patientUid) {
+                                        selectedPatientUid = patientUid;
+                                        document.getElementById("notificationModal").style.display = "block";
+                                    }
+
+                                    function closeNotificationModal() {
+                                        document.getElementById("notificationModal").style.display = "none";
+                                        document.getElementById("notificationTitle").value = '';
+                                        document.getElementById("notificationMessage").value = '';
+                                    }
+
+                                    function sendNotification() {
+                                        const title = document.getElementById("notificationTitle").value.trim();
+                                        const message = document.getElementById("notificationMessage").value.trim();
+                                        
+                                        if (!title) {
+                                        alert("Title cannot be empty.");
+                                        return;
+                                        }
+
+                                        if (!message) {
+                                            alert("Message cannot be empty.");
+                                            return;
+                                        }
+
+                                        fetch('/send_notification', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                            },
+                                            body: JSON.stringify({ uid: selectedPatientUid,title, message }),
+                                        })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.success) {
+                                                    alert(data.message);
+                                                } else {
+                                                    alert(data.error || 'Failed to send notification.');
+                                                }
+                                                closeNotificationModal();
+                                            })
+                                            .catch(error => {
+                                                console.error('Error:', error);
+                                                alert('Failed to send notification. Please try again.');
+                                            });
+                                    }
+                                </script>
+                            </div>
+                        </center>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

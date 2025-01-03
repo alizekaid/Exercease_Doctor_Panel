@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Doctor</title>
+
+    <style>
+        body {
+            background-color: white;
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        .container {
+            background: rgba(26, 26, 26, 0.05); /* Slight gray tint for contrast */
+            max-height: 100vh;
+            height: 100vh;
+            padding: 20px;
+            color: black;
+        }
+
+        h1 {
+            font-size: 42px;
+            font-weight: 700;
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            font-size: 18px;
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        input[type="email"], 
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #345cc4;
+            color: white;
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+        }
+
+        button:hover {
+            background-color: #2b4ba1;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <h1>Add New Doctor</h1>
+        <form action="{{ url_for('add_doctor') }}" method="POST">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="field">Assigned Field:</label>
+            <select id="field" name="field" required>
+                <option value="shoulder">Shoulder</option>
+                <option value="neck">Neck</option>
+                <option value="back">Back</option>
+                <option value="body1">body1</option>
+                <option value="body2">body2</option>
+                <option value="body3">body3</option>
+                <option value="body4">body4</option>
+                <option value="body5">body5</option>
+                <option value="body6">body6</option>
+                <option value="body7">body7</option>
+
+            </select>
+
+            <button type="submit">Add Doctor</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/animations.css">  
+    <link rel="stylesheet" href="../static/css/main.css">  
+    <link rel="stylesheet" href="../static/css/admin.css">
+        
+    <title>Dashboard</title>
+    <style>
+        .dashbord-tables, .doctor-heade {
+            animation: transitionIn-Y-over 0.5s;
+        }
+        .filter-container {
+            animation: transitionIn-Y-bottom 0.5s;
+        }
+        .sub-table, #anim {
+            animation: transitionIn-Y-bottom 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="menu">
+            <table class="menu-container" border="0">
+                <tr>
+                    <td style="padding:10px" colspan="2">
+                        <table border="0" class="profile-container">
+                            <tr>
+                                <td width="30%" style="padding-left:20px">
+                                    <img src="../static/img/user.png" alt="Profile Image" width="100%" style="border-radius:50%">
+                                </td>
+                                <td style="padding:0;margin:0;">
+                                    <p class="profile-title">Doctor</p>
+                                    <p class="profile-subtitle">{{doctor_email}}</p>
+                                    <p class="profile-role" style="font-size: 14px; color: #777;">Field: {{doctor_field}}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <a href="{{ url_for('logout') }}"><input type="button" value="Log out" class="logout-btn btn-primary-soft btn"></a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr class="menu-row">
+                    <td class="menu-btn menu-icon-dashbord menu-active menu-icon-dashbord-active">
+                        <a href="index.html" class="non-style-link-menu non-style-link-menu-active">
+                            <div>
+                                <p class="menu-text">Dashboard</p>
+                            </div>
+                        </a>
+                    </td>
+                </tr>
+                <tr class="menu-row">
+                    <td class="menu-btn menu-icon-patient">
+                        <a href="{{ url_for('doctor_patients') }}" class="non-style-link-menu">
+                            <div>
+                                <p class="menu-text">My Patients</p>
+                            </div>
+                        </a>
+                    </td>
+                </tr>
+            
+            </table>
+        </div>
+        <div class="dash-body" style="margin-top: 15px">
+            <table border="0" width="100%" style="border-spacing: 0; margin: 0; padding: 0;">
+                <tr>
+                    <td colspan="1" class="nav-bar">
+                        <p style="font-size: 23px; padding-left: 12px; font-weight: 600; margin-left: 20px;">Dashboard</p>
+                    </td>
+                    <td width="25%"></td>
+                    <td width="15%">
+                        <p style="font-size: 14px; color: rgb(119, 119, 119); padding: 0; margin: 0; text-align: right;">Date</p>
+                        <p class="heading-sub12" style="padding: 0; margin: 0;">{{ today_date }}</p>
+                    </td>
+                    <td width="10%">
+                        <button class="btn-label" style="display: flex; justify-content: center; align-items: center;">
+                            <img src="../static/img/calendar.svg" width="100%">
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <center>
+                            <table class="filter-container doctor-header" style="border: none; width: 95%" border="0">
+                                <tr>
+                                    <td>
+                                    <!--<h3>Welcome!</h3>-->
+                                        <h1>Welcome Doctor!</h1> 
+                                        <p>Thanks for joining us. View your daily schedule, reach patients' appointments at home!</p>
+                                    
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </center>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <table border="0" width="100%">
+                            <tr>
+                                <td width="50%">
+                                    <center>
+                                        <table class="filter-container" style="border: none;" border="0">
+                                            <tr>
+                                                <td colspan="4">
+                                                    <p style="font-size: 20px; font-weight: 600; padding-left: 12px;">Status</p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                        <!--    <td style="width: 25%;">
+                                                    <div class="dashboard-items" style="padding: 20px; margin: auto; width: 95%; display: flex;">
+                                                        <div>
+                                                            <div class="h1-dashboard">0</div>
+                                                            <div class="h1-dashboard"></div>
+                                                            <div class="h3-dashboard">All Doctors</div>
+                                                        </div>
+                                                    </div>
+                                                </td> -->
+                                                <td style="width: 25%;">
+                                                    <div class="dashboard-items" style="padding: 20px; margin: auto; width: 95%; display: flex;">
+                                                        <div>
+                                                            <div class="h1-dashboard">{{ patient_count }}</div>
+                                                            <div class="h1-dashboard"></div>
+                                                            <div class="h3-dashboard">All Patients</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </center>
+                                </td>
+                            <!--<td>
+                                    <p id="anim" style="font-size: 20px; font-weight: 600; padding-left: 40px;">Your Upcoming Sessions</p>
+                                </td>-->
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+
