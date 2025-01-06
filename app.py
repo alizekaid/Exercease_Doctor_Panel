@@ -136,6 +136,7 @@ def all_patients():
 
     return render_template("admin/patient.html", patients=patients_list, today_date=today_date)
 
+
 @app.route("/admin/dashboard")
 def admin_dashboard():
     # Only allow admin to view this page
@@ -153,13 +154,46 @@ def admin_dashboard():
     users_ref = db.collection("Users")
     total_users = len([user.id for user in users_ref.stream()])
 
+    # Retrieve patient data (limit to first 3 patients with injuries)
+    patients_list = []
+    all_users = users_ref.stream()
+
+    for user in all_users:
+        user_data = user.to_dict()
+        injuries_ref = users_ref.document(user.id).collection("Injuries")
+        injuries = injuries_ref.stream()
+
+        patient_injuries = []
+        for injury in injuries:
+            injury_data = injury.to_dict()
+            patient_injuries.append({
+                "body_part": injury.id,
+                "muscle_name": injury_data.get("muscleName", "Unknown"),
+                "pain_level": injury_data.get("painLevel", "Unknown"),
+                "progress": injury_data.get("progress", "Unknown"),
+            })
+
+        if patient_injuries:
+            patients_list.append({
+                "name_surname": user_data.get("name_surname", "Unknown"),
+                "age": user_data.get("age", "Unknown"),
+                "email": user_data.get("email", "Unknown"),
+                "uid": user_data.get("uid", "Unknown"),
+                "injuries": patient_injuries
+            })
+
+    # Limit the displayed patients to the first 3
+    limited_patients = patients_list[:3]
+
     return render_template(
         "admin/index.html",
         admin_email=admin_email,
         today_date=today_date,
         total_doctors=total_doctors,
-        total_users=total_users
+        total_users=total_users,
+        patients=limited_patients,
     )
+
 
 @app.route("/add_doctor", methods=["GET", "POST"])
 def add_doctor():
@@ -169,6 +203,7 @@ def add_doctor():
         return redirect(url_for("login"))
 
     if request.method == "POST":
+        doctor_name = request.form["doctor_name"]
         email = request.form["email"]
         password = request.form["password"]
         field = request.form["field"]
@@ -177,6 +212,7 @@ def add_doctor():
         try:
             # Add doctor to Firestore
             db.collection("Doctors").document(email).set({
+                "doctor_name": doctor_name,
                 "email": email,
                 "password": hashed_password,
                 "role": "doctor",  # Set the role of the new doctor
@@ -206,6 +242,7 @@ def doctor_dashboard():
     if doctor.exists:
         doctor_data = doctor.to_dict()
         doctor_field = doctor_data.get("field", "No field assigned")
+        doctor_name = doctor_data.get("doctor_name", "Doctor")
     else:
         doctor_field = "No field assigned"
 
@@ -229,6 +266,7 @@ def doctor_dashboard():
         doctor_email=doctor_email,
         today_date=today_date,
         doctor_field=doctor_field,
+        doctor_name=doctor_name,
         patient_count=patient_count,  # Pass the patient count to the template
     )
 

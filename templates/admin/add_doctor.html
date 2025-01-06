@@ -38,7 +38,8 @@
             margin-bottom: 10px;
             color: #555;
         }
-
+        
+        input[type="doctor_name"],
         input[type="email"], 
         input[type="password"],
         select {
@@ -73,6 +74,9 @@
     <div class="container">
         <h1>Add New Doctor</h1>
         <form action="{{ url_for('add_doctor') }}" method="POST">
+            <label for="name">Doctor Name:</label>
+            <input type="doctor_name" id="doctor_name" name="doctor_name" required>
+
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
 
@@ -96,6 +100,7 @@
                 <option value="quads">Quads</option>
                 <option value="trapezius">Trapezius</option>
                 <option value="triceps">Triceps</option>
+                <option value="lats">Lats</option>
             </select>
 
             <button type="submit">Add Doctor</button>
