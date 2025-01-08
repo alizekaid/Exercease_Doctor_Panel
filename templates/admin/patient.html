@@ -112,12 +112,17 @@
                 </tr>
                 <tr class="menu-row">
                     <td class="menu-btn menu-icon-dashbord menu-active menu-icon-dashbord-active">
-                        <a href="{{ url_for('admin_dashboard') }}" class="non-style-link-menu"><div><p class="menu-text">Dashboard</p></a></div>
+                        <a href="dashboard" class="non-style-link-menu"><div><p class="menu-text">Dashboard</p></a></div>
+                    </td>
+                </tr>
+                <tr class="menu-row">
+                    <td class="menu-btn menu-icon-doctor ">
+                        <a href="doctors" class="non-style-link-menu "><div><p class="menu-text">Doctors</p></a></div>
                     </td>
                 </tr>
                 <tr class="menu-row">
                     <td class="menu-btn menu-icon-patient menu-active menu-icon-patient-active">
-                        <a href="{{ url_for('all_patients') }}" class="non-style-link-menu non-style-link-menu-active"><div><p class="menu-text">All Patients</p></a></div>
+                        <a href="patients" class="non-style-link-menu non-style-link-menu-active"><div><p class="menu-text">All Patients</p></a></div>
                     </td>
                 </tr>
             </table>
@@ -172,7 +177,7 @@
                                             <td>{{ patient.age }}</td>
                                             <td>{{ patient.email }}</td>
                                             <td>
-                                                <a href="{{ url_for('see_exercises', uid=patient.uid) }}" class="btn btn-primary">See Exercises</a>
+                                                <a href="{{ url_for('admin_see_exercises', uid=patient.uid) }}" class="btn btn-primary">See Exercises</a>
                                                 <a href="#" class="btn btn-primary" onclick="openNotificationModal('{{ patient.uid }}')">Send Notification</a>
                                             </td>
                                         </tr>

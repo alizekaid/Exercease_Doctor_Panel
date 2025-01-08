@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercises</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007BFF;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .exercise-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #fefefe;
+        }
+
+        .exercise-card h3 {
+            margin: 0 0 10px;
+            color: #555;
+        }
+
+        .exercise-card p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .gif-container {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .gif-container h4 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .exercise-gif {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            margin: 10px auto;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Exercises for Patient</h1>
+        <a href="{{ url_for('all_patients') }}" class="btn">Back to Patients</a>
+        <div class="exercises-list">
+            {% if exercises %}
+                {% for exercise in exercises %}
+                <div class="exercise-card">
+                    <h3>{{ exercise.body_part | capitalize }}</h3>
+                    <p><strong>Muscle Name:</strong> {{ exercise.muscle_name }}</p>
+                    <p><strong>Pain Level:</strong> {{ exercise.pain_level }}</p>
+                    <p><strong>Assigned At:</strong> {{ exercise.timestamp }}</p>
+                    <p><strong>Progress:</strong> {{ exercise.progress | float | round(2) }}%</p>
+
+                    <div class="gif-container">
+                        <h4>Exercise GIFs</h4>
+                        {% for gif_url in exercise.gif_urls %}
+                        <img src="{{ gif_url }}" alt="{{ exercise.muscle_name }} exercise GIF" class="exercise-gif">
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No exercises assigned to this patient.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.secret_key = "ExercEaseMobileApplicationDevelopment"  # You can change this to a more secure key
 
 # Initialize Firestore
-cred = credentials.Certificate("exercease-d82ad-firebase-adminsdk-2e77p-ba3b9e9f3a.json")
+cred = credentials.Certificate("exercease-d82ad-firebase-adminsdk-2e77p-a96ff3f6e6.json")
 initialize_app(cred)
 db = firestore.client()
 
@@ -55,7 +55,7 @@ def login():
             if stored_role == "admin" and bcrypt.checkpw(userpassword.encode('utf-8'), stored_password.encode('utf-8')):
                 session["admin_email"] = useremail
                 session["role"] = stored_role
-                return redirect(url_for("admin_index"))  # Redirect to the admin index page
+                return redirect(url_for("admin_dashboard"))  # Redirect to the admin index page
             else:
                 flash("Invalid password or role for admin", "danger")
         else:
@@ -72,15 +72,6 @@ def logout():
     flash("You have been logged out successfully.", "info")
     return redirect(url_for("index"))  # Redirect to the login page
 
-@app.route("/admin/index")
-def admin_index():
-    # This will render the admin index page located in the "admin" folder
-    if session.get("role") != "admin":
-        flash("You are not authorized to view this page", "danger")
-        return redirect(url_for("login"))
-    admin_email = session.get("admin_email", "Unknown Email")
-    today_date = datetime.now().strftime("%B %d, %Y")
-    return render_template("admin/index.html", admin_email=admin_email, today_date=today_date)
 
 @app.route("/admin/doctors", methods=["GET"])
 def doctors():
@@ -152,7 +143,7 @@ def admin_dashboard():
     total_doctors = len([doc.id for doc in doctors_ref.stream()])
 
     users_ref = db.collection("Users")
-    total_users = len([user.id for user in users_ref.stream()])
+    #total_users = len([user.id for user in users_ref.stream()])
 
     # Retrieve patient data (limit to first 3 patients with injuries)
     patients_list = []
@@ -190,8 +181,9 @@ def admin_dashboard():
         admin_email=admin_email,
         today_date=today_date,
         total_doctors=total_doctors,
-        total_users=total_users,
+        #total_users=total_users,
         patients=limited_patients,
+        total_patients=len(patients_list)
     )
 
 
@@ -363,7 +355,7 @@ def doctor_patients():
 
 @app.route("/doctor/patient/<uid>/exercises", methods=["GET"])
 def see_exercises(uid):
-    if session.get("role") not in ["doctor", "admin"]:
+    if session.get("role") not in ["doctor"]:
         flash("You are not authorized to view this page", "danger")
         return redirect(url_for("login"))
     
@@ -385,6 +377,34 @@ def see_exercises(uid):
     
     return render_template(
         "doctor/exercises.html",
+        exercises=exercises,
+        uid=uid
+    )
+
+@app.route("/admin/patient/<uid>/exercises", methods=["GET"])
+def admin_see_exercises(uid):
+    if session.get("role") not in ["admin"]:
+        flash("You are not authorized to view this page", "danger")
+        return redirect(url_for("login"))
+    
+    # Retrieve injuries for the specific patient
+    patient_injuries_ref = db.collection("Users").document(uid).collection("Injuries")
+    injuries = patient_injuries_ref.stream()
+
+    exercises = []
+    for injury in injuries:
+        injury_data = injury.to_dict()
+        exercises.append({
+            "body_part": injury.id,
+            "gif_urls": injury_data.get("gifUrls", []),
+            "muscle_name": injury_data.get("muscleName", "Unknown"),
+            "pain_level": injury_data.get("painLevel", "Unknown"),
+            "timestamp": injury_data.get("timestamp", "Unknown"),
+            "progress": injury_data.get("progress", "Unknown"),
+        })
+    
+    return render_template(
+        "admin/exercises.html",
         exercises=exercises,
         uid=uid
     )
