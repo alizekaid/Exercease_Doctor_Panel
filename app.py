@@ -260,7 +260,21 @@ def doctor_dashboard():
             if injury.id.lower() == doctor_field:
                 patient_count += 1
                 break  # Stop checking injuries for this user once a match is found
-
+            elif  injury.id.lower() in ['tennis_elbow', 
+                                       'carpal_tunnel_syndrome',
+                                       'cervical_herniated_disc',
+                                       'golfers_elbow',
+                                       'lumbar_herniated_disc',
+                                       'meniscus_tear_in_the_knee',
+                                       'neck_stiffness',
+                                       'osteoarthritis_of_the_hip',
+                                       'sacroiliac_joint_degeneration',
+                                       'scoliosis',
+                                       'shoulder_impingement',
+                                       'weakness_in_muscles_around_the_scapula'
+                                       ] and doctor_field == 'diagnosed':
+                patient_count += 1
+                break  # Stop checking injuries for this user once a match is found
     return render_template(
         "doctor/index.html",
         doctor_email=doctor_email,
@@ -283,6 +297,7 @@ def doctor_patients():
     if doctor.exists:
         doctor_data = doctor.to_dict()
         doctor_field = doctor_data.get("field", "No field assigned").lower()
+        doctor_name = doctor_data.get("doctor_name", "Doctor")
     else:
         flash("Doctor's information not found", "danger")
         return redirect(url_for("login"))
@@ -308,13 +323,42 @@ def doctor_patients():
                     "uid": user_data.get("uid", "Unknown"),
                 })
                 break  # Stop checking injuries for this user once a match is found
+            elif injury.id.lower() in ['tennis_elbow', 
+                                       'carpal_tunnel_syndrome',
+                                       'cervical_herniated_disc',
+                                       'golfers_elbow',
+                                       'lumbar_herniated_disc',
+                                       'meniscus_tear_in_the_knee',
+                                       'neck_stiffness',
+                                       'osteoarthritis_of_the_hip',
+                                       'sacroiliac_joint_degeneration',
+                                       'scoliosis',
+                                       'shoulder_impingement',
+                                       'weakness_in_muscles_around_the_scapula'
+                                       ] and doctor_field == 'diagnosed':
+                 patients_list.append({
+                    "name_surname": user_data.get("name_surname", "Unknown"),
+                    "age": user_data.get("age", "Unknown"),
+                    "email": user_data.get("email", "Unknown"),
+                    "uid": user_data.get("uid", "Unknown"),
+                })
+    #print(patients_list)
+
+    patients_list_set = []
+    seen_users = set()
+
+    for entry in patients_list:
+        if entry['uid'] not in seen_users:
+            patients_list_set.append(entry)
+            seen_users.add(entry['uid'])
 
     return render_template(
         "doctor/patient.html", 
-        patients=patients_list, 
+        patients=patients_list_set, 
         doctor_field=doctor_field, 
         today_date=today_date,
-        doctor_email=doctor_email
+        doctor_email=doctor_email,
+        doctor_name = doctor_name
     )
 
 @app.route("/doctor/patient/<uid>/exercises", methods=["GET"])
