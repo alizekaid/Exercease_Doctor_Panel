@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.secret_key = "ExercEaseMobileApplicationDevelopment"  # You can change this to a more secure key
 
 # Initialize Firestore
-cred = credentials.Certificate("exercease-d82ad-firebase-adminsdk-2e77p-a96ff3f6e6.json")
+cred = credentials.Certificate("exercease-d82ad-firebase-adminsdk-2e77p-75832c25c4.json")
 initialize_app(cred)
 db = firestore.client()
 
