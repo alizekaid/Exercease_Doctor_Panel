@@ -264,7 +264,7 @@ def doctor_dashboard():
                                        'scoliosis',
                                        'shoulder_impingement',
                                        'weakness_in_muscles_around_the_scapula'
-                                       ] and doctor_field == 'diagnosed':
+                                       ] and doctor_field == 'orthopedist':
                 patient_count += 1
                 break  # Stop checking injuries for this user once a match is found
     return render_template(
@@ -327,7 +327,7 @@ def doctor_patients():
                                        'scoliosis',
                                        'shoulder_impingement',
                                        'weakness_in_muscles_around_the_scapula'
-                                       ] and doctor_field == 'diagnosed':
+                                       ] and doctor_field == 'orthopedist':
                  patients_list.append({
                     "name_surname": user_data.get("name_surname", "Unknown"),
                     "age": user_data.get("age", "Unknown"),
